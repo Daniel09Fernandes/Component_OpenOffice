@@ -3,7 +3,7 @@ unit MainModule;
 interface
 
 uses
-  uniGUIMainModule, SysUtils, Classes, uOpenOffice, uOpenOffice_calc;
+  uniGUIMainModule, SysUtils, Classes, uOpenOffice, uOpenOffice.Calc;
 
 type
   TUniMainModule = class(TUniGUIMainModule)

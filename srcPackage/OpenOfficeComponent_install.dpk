@@ -41,14 +41,14 @@ requires
 
 contains
   uOpenOffice in '..\Src\uOpenOffice.pas',
-  uOpenOffice_calc in '..\Src\uOpenOffice_calc.pas',
-  uOpenOffice_writer in '..\Src\uOpenOffice_writer.pas',
-  uOpenOfficeCollors in '..\Src\uOpenOfficeCollors.pas',
-  uOpenOfficeEvents in '..\Src\uOpenOfficeEvents.pas',
-  uOpenOfficeHelper in '..\Src\uOpenOfficeHelper.pas',
-  uOpenOfficeSetPrinter in '..\Src\uOpenOfficeSetPrinter.pas',
-  UConvertPDFToSheet in '..\Src\UConvertPDFToSheet.pas',
-  uInstallLibreOffice in '..\Src\uInstallLibreOffice.pas',
-  uOpenOfficeHungThread in '..\Src\uOpenOfficeHungThread.pas';
+  uOpenOffice.Calc in '..\Src\uOpenOffice.Calc.pas',
+  uOpenOffice.Writer in '..\Src\uOpenOffice.Writer.pas',
+  uOpenOffice.Collors in '..\Src\uOpenOffice.Collors.pas',
+  uOpenOffice.Events in '..\Src\uOpenOffice.Events.pas',
+  uOpenOffice.Helpers in '..\Src\uOpenOffice.Helpers.pas',
+  uOpenOffice.SetPrinter in '..\Src\uOpenOffice.SetPrinter.pas',
+  UConvert.PDFToSheet in '..\Src\UConvert.PDFToSheet.pas',
+  uInstall.LibreOffice in '..\Src\uInstall.LibreOffice.pas',
+  uOpenOffice.HungThread in '..\Src\uOpenOffice.HungThread.pas';
 
 end.

@@ -5,9 +5,9 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIRegClasses, uniGUIForm, uOpenOffice, uOpenOffice_calc,
-  uOpenOfficeHelper, uOpenOfficeCollors,
-  uniGUIBaseClasses, uniButton, uniFileUpload, uOpenOffice_writer;
+  uniGUIClasses, uniGUIRegClasses, uniGUIForm, uOpenOffice, uOpenOffice.Calc,
+  uOpenOffice.Helpers, uOpenOffice.Collors,
+  uniGUIBaseClasses, uniButton, uniFileUpload, uOpenOffice.Writer;
 
 type
   TMainForm = class(TUniForm)

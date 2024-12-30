@@ -5,12 +5,10 @@ program Console;
 
 uses
   System.SysUtils,
-  uOpenOfficeCollors,
-  uOpenOfficeHelper,
-  uOpenOfficeSetPrinter,
-  uOpenOffice_calc;
-
-
+  uOpenOffice.Collors,
+  uOpenOffice.Helpers,
+  uOpenOffice.SetPrinter,
+  uOpenOffice.calc;
 begin
   var
     OpenOffice_calc1 : TOpenOffice_calc;

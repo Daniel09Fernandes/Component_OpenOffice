@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils, uniGUIServer, uniGUIMainModule, uniGUIApplication, uIdCustomHTTPServer,
-  uniGUITypes, uOpenOffice, uOpenOffice_calc, FireDAC.UI.Intf,
+  uniGUITypes, uOpenOffice, uOpenOffice.Calc, FireDAC.UI.Intf,
   FireDAC.VCLUI.Wait, FireDAC.Stan.Intf, FireDAC.Comp.UI;
 
 type
