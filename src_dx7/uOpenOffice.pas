@@ -58,7 +58,7 @@ Type
     procedure CloseFile;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure saveFile(aFileName: String);
+    procedure saveFile(AFileName: String);
   end;
 
 implementation
@@ -201,14 +201,26 @@ begin
     objDocument.print(VarArrayOf([]));
 end;
 
-procedure TOpenOffice.saveFile(aFileName: String);
+procedure TOpenOffice.saveFile(AFileName: String);
+var
+  lSaveProperty : array [0..1] of Variant;
 begin
-  aFileName := convertFilePathToUrlFile(aFileName);
+  AFileName := ConvertFilePathToUrlFile(AFileName);
 
-  if Trim(aFileName) = '' then
-    aFileName := URlFile;
+  if AFileName.Contains('.xlsx') then
+  begin
+    //Codigo fornecido por @adolfomayer - e adptado por @dinosdev 29/11/2024
+    lSaveProperty[0] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    lSaveProperty[0].Name := 'FilterName';
+    lSaveProperty[0].Value := 'Calc MS Excel 2007 XML'; //for XLSX
 
-  objDocument.storeAsURL(aFileName, VarArrayOf([]));
+    lSaveProperty[1] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    lSaveProperty[1].Name := 'Overwrite';
+    lSaveProperty[1].Value := True;
+    ObjDocument.storeAsURL(AFileName, VarArrayOf(lSaveProperty))
+  end
+  else
+    ObjDocument.storeAsURL(AFileName, VarArrayOf([]));
 end;
 
 end.

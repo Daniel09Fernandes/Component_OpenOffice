@@ -83,10 +83,10 @@ type
     procedure SetSheetName(const Value: string);
   published
     property ServicesManager: OleVariant read objServiceManager;
-    property Cell: OleVariant read objCell write objCell;
-    property oSCalc: OleVariant read objSCalc write objSCalc;
+    property Cell: OleVariant read ObjCell write ObjCell;
+    property OSCalc: OleVariant read ObjSCalc write ObjSCalc;
     property Fields: TFieldsSheet read FFields;
-    property CoreReflection :OleVariant read objCoreReflection;
+    property CoreReflection :OleVariant read ObjCoreReflection;
     property SheetName: string read FSheetName write SetSheetName;
     property NumberMask: TNumberMask read FNumberMask write FNumberMask;
     //---------events-----------//
@@ -267,19 +267,19 @@ begin
     OnAfterGetValue(self);
 end;
 
-function TOpenOffice_Calc.positionSheetByName(const ASheetName: string):TOpenOffice_Calc;
+function TOpenOffice_Calc.PositionSheetByName(const ASheetName: string):TOpenOffice_Calc;
 begin
   ObjSCalc := ObjDocument.Sheets.getByName(ASheetName);
   Result := Self;
 end;
 
-function TOpenOffice_Calc.positionSheetByIndex(const ASheetIndex: integer) :TOpenOffice_Calc;
+function TOpenOffice_Calc.PositionSheetByIndex(const ASheetIndex: integer) :TOpenOffice_Calc;
 begin
   ObjSCalc := ObjDocument.Sheets.getByIndex(ASheetIndex);
   Result := Self;
 end;
 
-function TOpenOffice_Calc.addNewSheet(const ASheetName: string; APosition: integer): TOpenOffice_Calc;
+function TOpenOffice_Calc.AddNewSheet(const ASheetName: string; APosition: integer): TOpenOffice_Calc;
 begin
   ObjDocument.Sheets.insertNewByName(ASheetName, APosition);
   ObjSCalc := ObjDocument.Sheets.getByName(ASheetName);
@@ -287,7 +287,7 @@ begin
   Result := Self;
 end;
 
-function TOpenOffice_Calc.setFormula(ACellNumber: Integer; const ACollName: string;
+function TOpenOffice_Calc.SetFormula(ACellNumber: Integer; const ACollName: string;
   const AFormula: string): TOpenOffice_Calc;
 var
   lMap: string;
@@ -351,7 +351,7 @@ begin
 end;
 
 { TFieldsSheet }
-function TFieldsSheet.getField(AIndex: integer): string;
+function TFieldsSheet.GetField(AIndex: integer): string;
 var lDifIdx : double;
     lLetter : String;
 begin
@@ -427,7 +427,7 @@ begin
   end;
 end;
 
-procedure TFieldsSheet.setArrayFieldsSheet;
+procedure TFieldsSheet.SetArrayFieldsSheet;
 begin
   SetLength(ArrFields, 26);
 

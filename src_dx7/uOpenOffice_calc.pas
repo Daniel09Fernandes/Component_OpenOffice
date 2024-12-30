@@ -88,6 +88,7 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure startSheet;
     procedure positionSheetByName(aSheetName: string);
+	function PositionSheetByIndex(const ASheetIndex: Integer): TOpenOffice_Calc;
     procedure addNewSheet(aSheetName: string; aPosition: integer);
     function setFormula(aCellNumber: integer; aCollName: string; aFormula: string): TOpenOffice_calc;
     function SetValue(aCellNumber: integer; aCollName: string; aValue: variant; TypeValue: TTypeValue = ftString; Wrapped: boolean = false): TOpenOffice_calc;
@@ -295,6 +296,12 @@ begin
   objSCalc := objDocument.Sheets.getByName(aSheetName);
 end;
 
+function TOpenOffice_Calc.PositionSheetByIndex(const ASheetIndex: integer) :TOpenOffice_Calc;
+begin
+  ObjSCalc := ObjDocument.Sheets.getByIndex(ASheetIndex);
+  Result := Self;
+end;
+
 procedure TOpenOffice_calc.addNewSheet(aSheetName: string; aPosition: integer);
 begin
   objDocument.Sheets.insertNewByName(aSheetName, aPosition);
@@ -309,7 +316,7 @@ begin
   map := aCollName + intToStr(aCellNumber);
   objCell := objSCalc.getCellByPosition(getIndex(aCollName),
     aCellNumber);
-  objCell.Formula := (aFormula);
+  objCell.FormulaLocal := (aFormula);
 
   Result := self;
 end;
