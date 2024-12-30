@@ -31,7 +31,7 @@ https://pt-br.libreoffice.org/baixe-ja/libreoffice-novo/
  
 | Project {versionOficial}   	| Version 	   |
 |----------------------------	|------------ |
-| 19.5                     	  | tested ✅  |
+| 20.1                     	  | tested ✅  | 
 
 Tested Delphi version
 
