@@ -1,11 +1,24 @@
 # DinosOffice: Delphi Components for LibreOffice
 
-### Important
+## Important
 ----
 
 the DocVisible property was included, by default it is false, so when generating the spreadsheet it is not displayed on the screen,
 If you want to see the spreadsheet being generated, set it to true;
 
+## Notice:
+! In this new update, improvements were applied to the names of sources and the names of methods and parameters, standardizing with the Embarcadero guide, 
+
+When updating the component, change the units, if you are already using them in your project.
+
+changed units
+- from uOpenOfficeCollors to uOpenOffice.Collors
+- from uOpenOfficeHelper to uOpenOffice.Helpers
+- from uOpenOfficeSetPrinter to uOpenOffice.SetPrinter
+- from uOpenOffice_calc to uOpenOffice.Calc
+- from UOpenOffice_writer to uOpenOffice.Writer
+
+---
 ## Running in: 
 ### Vcl, Fmx(Win32/64), Unigui, Intraweb
 
