@@ -4,10 +4,13 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Controls.Presentation, FMX.StdCtrls, uOpenOfficeCollors,
-  uOpenOfficeHelper,
-  uOpenOfficeSetPrinter,
-  uOpenOffice_calc, uOpenOffice;
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Controls.Presentation, FMX.StdCtrls,
+
+  uOpenOffice.Collors,
+  uOpenOffice.Helpers,
+  uOpenOffice.SetPrinter,
+  uOpenOffice.Calc,
+  uOpenOffice;
 
 type
   TForm2 = class(TForm)

@@ -35,9 +35,11 @@ unit uOpenOffice;
 
 interface
 
-uses ActiveX, System.Classes, Vcl.Dialogs, System.Variants, Windows,
-  uOpenOfficeSetPrinter, uOpenOfficeEvents, uInstallLibreOffice,uOpenOfficeHungThread,
-  System.UITypes;
+uses ActiveX, System.Classes, Vcl.Dialogs, System.Variants, Windows, System.UITypes,
+  uOpenOffice.SetPrinter,
+  uOpenOffice.Events,
+  uInstall.LibreOffice,
+  uOpenOffice.HungThread;
 
 Type
   TTypeOffice = (TpCalc, TpWriter);
@@ -52,27 +54,36 @@ Type
     FOnBeforePrint: TBeforePrint;
     FOnBeforeCloseFile: TBeforeCloseFile;
     FOnAfterCloseFile: TAfterCloseFile;
-
     FOnAfterGetValue: TAfterGetValue;
     FOnBeforeGetValue: TBeforeGetValue;
     FOnAfterSetValue: TAfterSetValue;
     FOnBeforeSetValue: TBeforeSetValue;
-
     InstallLibreOffice: TInstallLibreOffice;
-    FDocVisible: boolean;
+    FDocVisible: Boolean;
+
     procedure SetURlFile(const Value: string);
-    procedure inicialization;
-    procedure setParamsInicialization;
+    procedure Inicialization;
+    procedure SetParamsInicialization;
   protected
     { Protected declarations }
-    objCoreReflection, objDesktop, objServiceManager, objDocument, oValMacro,
-    objSCalc, objWriter, objDispatcher, objCell, Charts: OleVariant;
-    oInicializationProperties : array [0 .. 1] of variant;
+    ObjCoreReflection,
+    ObjDesktop,
+    ObjServiceManager,
+    ObjDocument,
+    OValMacro,
+    ObjSCalc,
+    ObjWriter,
+    ObjDispatcher,
+    ObjCell,
+    ObjCharts: OleVariant;
+    OInicializationProperties : array [0 .. 1] of Variant;
     NewFile: array [0 .. 1] of string;
-    function convertFilePathToUrlFile(aFilePath: string): string;
+
+    function ConvertFilePathToUrlFile(AFilePath: string): string;
+    procedure LoadDocument(AFileName: string = '');
+
     Property SetPrinter: TSetPrinter read FSetPrinter write FSetPrinter;
-    procedure LoadDocument(FileName: string = '');
-     property HungThread : TOpenOfficeHungThread read FOpenOfficeHungThread write FOpenOfficeHungThread;
+    property HungThread : TOpenOfficeHungThread read FOpenOfficeHungThread write FOpenOfficeHungThread;
   published
     property URlFile: string read FURlFile write SetURlFile;
     property OnBeforePrint: TBeforePrint read FOnBeforePrint
@@ -91,11 +102,12 @@ Type
       write FOnAfterSetValue;
     property DocVisible : boolean read FDocVisible write FDocVisible;
   public
-    procedure print;
-    procedure CloseFile;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure saveFile(aFileName: String);
+
+    procedure Print;
+    procedure CloseFile;
+    procedure SaveFile(AFileName: String);
   end;
 
 implementation
@@ -108,33 +120,33 @@ uses
 procedure TOpenOffice.CloseFile;
 begin
   if Assigned(FOnBeforeCloseFile) then
-    FOnBeforeCloseFile(self);
+    FOnBeforeCloseFile(Self);
 
-  objDocument.close(True);
+  ObjDocument.close(True);
 
   if Assigned(FOnAfterCloseFile) then
-    FOnAfterCloseFile(self);
+    FOnAfterCloseFile(Self);
 end;
 
-function TOpenOffice.convertFilePathToUrlFile(aFilePath: string): string;
+function TOpenOffice.ConvertFilePathToUrlFile(AFilePath: string): string;
 begin
-  if (pos('FILE:///', UpperCase(aFilePath)) <= 0) then
+  if (pos('FILE:///', UpperCase(AFilePath)) <= 0) then
   begin
-    aFilePath := StringReplace(aFilePath, '\', '/', [rfReplaceAll]);
-    aFilePath := 'file:///' + aFilePath;
+    AFilePath := StringReplace(AFilePath, '\', '/', [rfReplaceAll]);
+    AFilePath := 'file:///' + AFilePath;
   end;
-  Result := aFilePath;
+  Result := AFilePath;
 end;
 
 procedure TOpenOffice.SetURlFile(const Value: string);
 begin
   FURlFile := Value;
 
-  if FURlFile.Trim.IsEmpty or (FURlFile = NewFile[integer(TpCalc)]) or
-    (FURlFile = NewFile[integer(TpWriter)]) then
+  if FURlFile.Trim.IsEmpty or (FURlFile = NewFile[Integer(TpCalc)]) or
+    (FURlFile = NewFile[Integer(TpWriter)]) then
     exit;
 
-  FURlFile := convertFilePathToUrlFile(FURlFile);
+  FURlFile := ConvertFilePathToUrlFile(FURlFile);
 end;
 
 constructor TOpenOffice.Create(AOwner: TComponent);
@@ -163,36 +175,36 @@ begin
   inherited;
   InitializeCOM;
   FOpenOfficeHungThread := TOpenOfficeHungThread.Create;
-  inicialization;
+  Inicialization;
   FSetPrinter := TSetPrinter.Create(nil);
-  NewFile[integer(TpCalc)] := 'private:factory/scalc';
-  NewFile[integer(TpWriter)] := 'private:factory/swriter';
+  NewFile[Integer(TpCalc)] := 'private:factory/scalc';
+  NewFile[Integer(TpWriter)] := 'private:factory/swriter';
 end;
 
 destructor TOpenOffice.Destroy;
 begin
   inherited;
   FSetPrinter.Free;
-  objCoreReflection := Unassigned;
-  objDesktop := Unassigned;
-  objServiceManager := Unassigned;
-  objDocument := Unassigned;
-  objSCalc := Unassigned;
-  objCell := Unassigned;
+  ObjCoreReflection := Unassigned;
+  ObjDesktop := Unassigned;
+  ObjServiceManager := Unassigned;
+  ObjDocument := Unassigned;
+  ObjSCalc := Unassigned;
+  ObjCell := Unassigned;
 
   freeAndNil(FOpenOfficeHungThread);
   if assigned(InstallLibreOffice) then
     freeAndNil(InstallLibreOffice);
 end;
 
-procedure TOpenOffice.inicialization;
+procedure TOpenOffice.Inicialization;
 begin
   try
     // Libre office
-    objServiceManager := CreateOleObject('com.sun.star.ServiceManager');
-    objCoreReflection := objServiceManager.createInstance
+    ObjServiceManager := CreateOleObject('com.sun.star.ServiceManager');
+    ObjCoreReflection := ObjServiceManager.createInstance
       ('com.sun.star.reflection.CoreReflection');
-    objDesktop := objServiceManager.createInstance('com.sun.star.frame.Desktop');
+    ObjDesktop := ObjServiceManager.createInstance('com.sun.star.frame.Desktop');
   except
     if messageDlg('Erro(pt-Br):  Instale o LibreOffice para usar o sistema' +
       #13 + #13 + 'Error(En)  :  install  the LibreOffice to use the system' +
@@ -209,93 +221,93 @@ begin
   end;
 end;
 
-procedure TOpenOffice.LoadDocument(FileName: string = '');
-var i: integer;
+procedure TOpenOffice.LoadDocument(AFileName: string = '');
+var lIdx: Integer;
 begin
   CoInitialize(nil);
-  if FileName = '' then
-    FileName := '_blank';
+  if AFileName = '' then
+    AFileName := '_blank';
 
-  for I := 0 to High(oInicializationProperties) do
-    VarClear(oInicializationProperties[i]);
+  for lIdx := 0 to High(OInicializationProperties) do
+    VarClear(OInicializationProperties[lIdx]);
 
   if not DocVisible then
-    setParamsInicialization;
+    SetParamsInicialization;
 
-  objDocument := objDesktop.loadComponentFromURL(URlFile, FileName, 0,VarArrayOf(oInicializationProperties));
+  ObjDocument := ObjDesktop.loadComponentFromURL(URlFile, AFileName, 0,VarArrayOf(OInicializationProperties));
 end;
 
-procedure TOpenOffice.setParamsInicialization;
+procedure TOpenOffice.SetParamsInicialization;
 begin
-    oInicializationProperties[0] := objServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
-    oInicializationProperties[0].Name := 'Hidden';
-    oInicializationProperties[0].Value := true;
+    OInicializationProperties[0] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    OInicializationProperties[0].Name := 'Hidden';
+    OInicializationProperties[0].Value := true;
 
-    oValMacro :=  objServiceManager.createInstance('com.sun.star.document.MacroExecMode.ALWAYS_EXECUTE_NO_WARN');
+    OValMacro :=  ObjServiceManager.createInstance('com.sun.star.document.MacroExecMode.ALWAYS_EXECUTE_NO_WARN');
 
-    oInicializationProperties[1] := objServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
-    oInicializationProperties[1].Name := 'MacroExecutionMode';
-    oInicializationProperties[1].Value := oValMacro;
+    OInicializationProperties[1] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    OInicializationProperties[1].Name := 'MacroExecutionMode';
+    OInicializationProperties[1].Value := OValMacro;
 end;
 
-procedure TOpenOffice.print;
+procedure TOpenOffice.Print;
 var
-  PaperSize: variant;
-  printerProperties: array [0 .. 3] of variant;
+  lPaperSize: Variant;
+  lPrinterProperties: array [0 .. 3] of Variant;
 begin
 
   if Assigned(OnBeforePrint) then
   begin
-    OnBeforePrint(self, FSetPrinter);
+    OnBeforePrint(Self, FSetPrinter);
 
-    PaperSize := objServiceManager.Bridge_GetStruct('com.sun.star.awt.Size');
+    lPaperSize := ObjServiceManager.Bridge_GetStruct('com.sun.star.awt.Size');
 
-    PaperSize.Width := FSetPrinter.PaperSize_Width;
-    PaperSize.Height := FSetPrinter.PaperSize_Height;
+    lPaperSize.Width := FSetPrinter.PaperSize_Width;
+    lPaperSize.Height := FSetPrinter.PaperSize_Height;
 
-    printerProperties[0] := objServiceManager.Bridge_GetStruct
+    lPrinterProperties[0] := ObjServiceManager.Bridge_GetStruct
       ('com.sun.star.beans.PropertyValue');
-    printerProperties[0].Name := 'Name';
-    printerProperties[0].Value := FSetPrinter.PrinterName;
+    lPrinterProperties[0].Name := 'Name';
+    lPrinterProperties[0].Value := FSetPrinter.PrinterName;
 
-    printerProperties[1] := objServiceManager.Bridge_GetStruct
+    lPrinterProperties[1] := ObjServiceManager.Bridge_GetStruct
       ('com.sun.star.beans.PropertyValue');
-    printerProperties[1].Name := 'PaperSize';
-    printerProperties[1].Value := PaperSize;
+    lPrinterProperties[1].Name := 'PaperSize';
+    lPrinterProperties[1].Value := lPaperSize;
 
-    printerProperties[2] := objServiceManager.Bridge_GetStruct
+    lPrinterProperties[2] := ObjServiceManager.Bridge_GetStruct
       ('com.sun.star.beans.PropertyValue');
-    printerProperties[2].Name := 'Pages';
-    printerProperties[2].Value := FSetPrinter.Pages;
+    lPrinterProperties[2].Name := 'Pages';
+    lPrinterProperties[2].Value := FSetPrinter.Pages;
 
-    objDocument.Printer := VarArrayOf(printerProperties);
+    ObjDocument.Printer := VarArrayOf(lPrinterProperties);
 
-    objDocument.print(VarArrayOf(printerProperties));
+    ObjDocument.print(VarArrayOf(lPrinterProperties));
   end
   else
-    objDocument.print(VarArrayOf([]));
+    ObjDocument.print(VarArrayOf([]));
 end;
 
-procedure TOpenOffice.saveFile(aFileName: String);
+procedure TOpenOffice.SaveFile(AFileName: String);
 var
-  SaveProperty : array [0..1] of variant;
+  lSaveProperty : array [0..1] of Variant;
 begin
-  aFileName := convertFilePathToUrlFile(aFileName);
+  AFileName := ConvertFilePathToUrlFile(AFileName);
 
-  if aFileName.Contains('.xlsx') then
+  if AFileName.Contains('.xlsx') then
   begin
     //Codigo fornecido por @adolfomayer - e adptado por @dinosdev 29/11/2024
-    SaveProperty[0] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
-    SaveProperty[0].Name := 'FilterName';
-    SaveProperty[0].Value := 'Calc MS Excel 2007 XML'; //for XLSX
+    lSaveProperty[0] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    lSaveProperty[0].Name := 'FilterName';
+    lSaveProperty[0].Value := 'Calc MS Excel 2007 XML'; //for XLSX
 
-    SaveProperty[1] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
-    SaveProperty[1].Name := 'Overwrite';
-    SaveProperty[1].Value := True;
-    objDocument.storeAsURL(aFileName, VarArrayOf(SaveProperty))
+    lSaveProperty[1] := ObjServiceManager.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+    lSaveProperty[1].Name := 'Overwrite';
+    lSaveProperty[1].Value := True;
+    ObjDocument.storeAsURL(AFileName, VarArrayOf(lSaveProperty))
   end
   else
-    objDocument.storeAsURL(aFileName, VarArrayOf([]));
+    ObjDocument.storeAsURL(AFileName, VarArrayOf([]));
 end;
 
 end.

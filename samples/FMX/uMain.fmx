@@ -19,7 +19,7 @@ object Form2: TForm2
     TextSettings.Trimming = None
     OnClick = Button1Click
   end
-  object OpenOffice_calc1: TOpenOffice_calc
+  object OpenOffice_calc1: TOpenOffice_Calc
     DocVisible = False
     Left = 152
     Top = 80

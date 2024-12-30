@@ -6,9 +6,9 @@ program API;
 uses
   System.SysUtils,
   Horse,
-  uOpenOffice_Calc,
-  uOpenOfficeHelper,
-  uOpenOfficeCollors;
+  uOpenOffice.Calc,
+  uOpenOffice.Helpers,
+  uOpenOffice.Collors;
 
 procedure GetSheet(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 begin
@@ -16,7 +16,7 @@ begin
   OpenOffice_calc1 := TOpenOffice_calc.Create(nil);
   try
     OpenOffice_calc1.DocVisible := false;
-    OpenOffice_calc1.startSheet;
+    OpenOffice_calc1.StartSheet;
 
     OpenOffice_calc1.SetValue(1, 'A', 'STATUS').SetBorder([bAll], opBrown)
       .changeJustify(fthRIGHT, ftvTOP).setBold(true).changeFont('Arial', 12)
@@ -43,7 +43,7 @@ begin
     OpenOffice_calc1.SetValue(7, 'A', 'Total de Colunas');
     OpenOffice_calc1.SetValue(7, 'B', OpenOffice_calc1.CountCell, ftNumeric);
 
-    OpenOffice_calc1.addNewSheet('A Receber', 1);
+    OpenOffice_calc1.AddNewSheet('A Receber', 1);
 
     OpenOffice_calc1.SetValue(1, 'A', 'VALOR').SetBorder([bAll], opBrown)
       .changeJustify(fthRIGHT, ftvTOP).setBold(true);
@@ -85,9 +85,9 @@ begin
 
     OpenOffice_calc1.SetValue(19, 'A', 'Total de Colunas');
     OpenOffice_calc1.SetValue(19, 'B', OpenOffice_calc1.CountCell, ftNumeric);
-    OpenOffice_calc1.setFormula(20, 'A', '=A2+A3+A4+A15').setBold(true);
+    OpenOffice_calc1.SetFormula(20, 'A', '=A2+A3+A4+A15').setBold(true);
 
-    OpenOffice_calc1.positionSheetByName('Planilha1');
+    OpenOffice_calc1.PositionSheetByName('Planilha1');
 
     // Configure the chart settings
     var
@@ -105,18 +105,18 @@ begin
     SettingsChart.ChartName := 'TestChart';
     SettingsChart.typeChart := ctDefault;
 
-    OpenOffice_calc1.addChart(SettingsChart);
+    OpenOffice_calc1.AddChart(SettingsChart);
 
     SettingsChart.typeChart := ctVertical;
-    OpenOffice_calc1.addChart(SettingsChart);
+    OpenOffice_calc1.AddChart(SettingsChart);
 
     SettingsChart.typeChart := ctPie;
-    OpenOffice_calc1.addChart(SettingsChart);
+    OpenOffice_calc1.AddChart(SettingsChart);
 
     SettingsChart.typeChart := ctLine;
-    OpenOffice_calc1.addChart(SettingsChart);
+    OpenOffice_calc1.AddChart(SettingsChart);
 
-    OpenOffice_calc1.saveFile(GetHomePath + '\sheet.xls');
+    OpenOffice_calc1.SaveFile(GetHomePath + '\sheet.xls');
     OpenOffice_calc1.CloseFile;
 
     Res.Send(OpenOffice_calc1.SheetToBase64(GetHomePath + '\sheet.xls'));

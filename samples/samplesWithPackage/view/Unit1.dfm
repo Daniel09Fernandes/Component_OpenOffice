@@ -810,13 +810,13 @@ object Form1: TForm1
     Left = 212
     Top = 464
   end
-  object OpenOffice_calc1: TOpenOffice_calc
+  object OpenOffice_calc1: TOpenOffice_Calc
     DocVisible = False
     Left = 296
     Top = 232
   end
   object OpenOffice_writer1: TOpenOffice_writer
-    DocVisible = False
+    DocVisible = True
     Left = 420
     Top = 224
   end

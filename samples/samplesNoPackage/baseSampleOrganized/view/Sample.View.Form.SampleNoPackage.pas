@@ -17,13 +17,6 @@ uses
   Vcl.ExtCtrls,
   Vcl.Buttons,
   Vcl.Mask,
-
-  uOpenOffice_calc,
-  UOpenOffice_writer,
-  uOpenOfficeCollors,
-  uOpenOfficeHelper,
-  uOpenOfficeSetPrinter,
-
   Vcl.ComCtrls,
   Data.DB,
   Datasnap.DBClient,
@@ -31,8 +24,13 @@ uses
   Vcl.DBGrids,
   Vcl.Menus,
   Datasnap.Provider,
-  uOpenOffice;
 
+  uOpenOffice.Calc,
+  UOpenOffice.Writer,
+  uOpenOffice.Collors,
+  uOpenOffice.Helpers,
+  uOpenOffice.SetPrinter,
+  uOpenOffice;
 type
   TFormSampleNoPackage = class(TForm)
     Button1: TButton;
