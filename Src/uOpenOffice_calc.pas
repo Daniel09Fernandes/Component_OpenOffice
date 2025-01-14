@@ -340,8 +340,7 @@ begin
        Result.Post;
       end;
   finally
-    Result.EnableControls;
-    CloseFile;
+    Result.EnableControls;   
   end;
 end;
 
