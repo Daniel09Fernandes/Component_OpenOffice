@@ -95,7 +95,7 @@ type
     function GetValue(aCellNumber: integer; const aCollName: String) : TOpenOffice_calc;
     procedure DataSetToSheet(const aCds : TClientDataSet);
     procedure CallConversorPDFTOSheet;
-    function  SheetToDataSet(const TabSheetName: String): TClientDataSet;
+    function  SheetToDataSet(const TabSheetName: String = ''): TClientDataSet;
     procedure ExeThread(pProc : Tproc);
   published
     property ServicesManager: OleVariant read objServiceManager;
@@ -212,8 +212,7 @@ begin
       SetValue(0,FFields.arrFields[idx],aCds.Fields[idx].DisplayName)
       .setBold(true)
       .setBorder([bAll], opBlack)
-      .changeFont('Liberation Sans',11)
-      .setColor(opWhite,opSoftGray);
+      .setColor(opBlack,opSoftGray);
 
       aCds.First;
       while not aCds.Eof do
@@ -320,14 +319,18 @@ begin
      FOnAfterStartFile(self);
 end;
 
-function TOpenOffice_calc.SheetToDataSet(const TabSheetName: String): TClientDataSet;
+function TOpenOffice_calc.SheetToDataSet(const TabSheetName: String = ''): TClientDataSet;
 var I, IdxField : Integer;
 begin
   Result := TClientDataSet.Create(nil);
   try
-     positionSheetByName(TabSheetName);
+     if not TabSheetName.trim.IsEmpty then
+       positionSheetByName(TabSheetName)
+     else
+       positionSheetByIndex(0);
+
      for I := 0 to CountCell -1 do
-       Result.FieldDefs.Add(GetValue(1,Fields.getField(I)).Value,TFieldType.ftString,100);
+       Result.FieldDefs.Add(GetValue(1,Fields.getField(I)).Value,TFieldType.ftString,3000);
      Result.CreateDataSet;
      Result.DisableControls;
      Result.LogChanges := false;
