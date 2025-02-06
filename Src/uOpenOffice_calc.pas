@@ -86,16 +86,16 @@ type
     Value: string;
     destructor Destroy; override;
     constructor Create(AOwner: TComponent); override;
-    procedure startSheet;
-    procedure addNewSheet(const aSheetName: string; aPosition: integer);
-    function positionSheetByIndex(const aSheetIndex: integer): TOpenOffice_calc;
-    function positionSheetByName(const aSheetName: string):TOpenOffice_calc;
-    function setFormula(aCellNumber: integer; const aCollName: string; const aFormula: string): TOpenOffice_calc;
+    procedure StartSheet;
+    procedure AddNewSheet(const aSheetName: string; aPosition: integer);
+    function PositionSheetByIndex(const aSheetIndex: integer): TOpenOffice_calc;
+    function PositionSheetByName(const aSheetName: string):TOpenOffice_calc;
+    function SetFormula(aCellNumber: integer; const aCollName: string; const aFormula: string): TOpenOffice_calc;
     function SetValue(aCellNumber: integer; const aCollName: string; aValue: variant; TypeValue: TTypeValue = ftString; Wrapped: boolean = false): TOpenOffice_calc;
     function GetValue(aCellNumber: integer; const aCollName: String) : TOpenOffice_calc;
     procedure DataSetToSheet(const aCds : TClientDataSet);
     procedure CallConversorPDFTOSheet;
-    function  SheetToDataSet(const TabSheetName: String = ''): TClientDataSet;
+    function  SheetToDataSet(const TabSheetName: String; TabSheetIndex: Integer = 0): TClientDataSet;
     procedure ExeThread(pProc : Tproc);
   published
     property ServicesManager: OleVariant read objServiceManager;
@@ -319,7 +319,7 @@ begin
      FOnAfterStartFile(self);
 end;
 
-function TOpenOffice_calc.SheetToDataSet(const TabSheetName: String = ''): TClientDataSet;
+function TOpenOffice_calc.SheetToDataSet(const TabSheetName: String; TabSheetIndex: Integer = 0): TClientDataSet;
 var I, IdxField : Integer;
 begin
   Result := TClientDataSet.Create(nil);
@@ -327,7 +327,7 @@ begin
      if not TabSheetName.trim.IsEmpty then
        positionSheetByName(TabSheetName)
      else
-       positionSheetByIndex(0);
+       positionSheetByIndex(TabSheetindex);
 
      for I := 0 to CountCell -1 do
        Result.FieldDefs.Add(GetValue(1,Fields.getField(I)).Value,TFieldType.ftString,3000);
@@ -346,8 +346,6 @@ begin
     Result.EnableControls;   
   end;
 end;
-
-
 
 { TFieldsSheet }
 
